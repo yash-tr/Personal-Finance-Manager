@@ -123,7 +123,7 @@ A comprehensive **Spring Boot REST API** for personal finance management with co
 
 #### 1. **Clone the Repository**
 ```bash
-git clone https://github.com/your-username/finance-management.git
+git clone https://github.com/yash-tr/Personal-Finance-Manager.git
 cd finance-management
 ```
 
@@ -657,20 +657,3 @@ bash financial_manager_tests.sh
 - [ ] API validation tests passing
 - [ ] No security vulnerabilities introduced
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 📞 Support
-
-For questions, issues, or contributions:
-
-- **Issues**: [GitHub Issues](https://github.com/your-username/finance-management/issues)
-- **Documentation**: This README and JavaDoc
-- **Email**: your-email@example.com
-
----
-
-**Built with ❤️ using Spring Boot and Java 21** 
