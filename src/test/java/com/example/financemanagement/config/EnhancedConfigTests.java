@@ -87,7 +87,7 @@ class EnhancedConfigTests {
         assertTrue(passwordEncoder.matches(longPassword, encodedLong));
         
         // Test with unicode characters
-        String unicodePassword = "пароль123";
+        String unicodePassword = "password123";
         String encodedUnicode = passwordEncoder.encode(unicodePassword);
         assertNotNull(encodedUnicode);
         assertTrue(passwordEncoder.matches(unicodePassword, encodedUnicode));

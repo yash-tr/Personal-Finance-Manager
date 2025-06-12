@@ -8,21 +8,21 @@
 
 A comprehensive **Spring Boot REST API** for personal finance management with complete **CRUD operations**, **user authentication**, **savings goals tracking**, and **financial reporting**. The application achieves **88% test coverage** and **100% compliance** with comprehensive API validation tests.
 
-## 📑 Table of Contents
+## Table of Contents
 
-- [Features](#-features)
-- [Technology Stack](#-technology-stack)
-- [Architecture & Design Decisions](#-architecture--design-decisions)
-- [Setup Instructions](#-setup-instructions)
-- [API Documentation](#-api-documentation)
-- [Database Schema](#-database-schema)
-- [Testing](#-testing)
-- [Security](#-security)
-- [Performance](#-performance)
-- [Contributing](#-contributing)
-- [License](#-license)
+- [Features](#features)
+- [Technology Stack](#technology-stack)
+- [Architecture & Design Decisions](#architecture--design-decisions)
+- [Setup Instructions](#setup-instructions)
+- [API Documentation](#api-documentation)
+- [Database Schema](#database-schema)
+- [Testing](#testing)
+- [Security](#security)
+- [Performance](#performance)
+- [Contributing](#contributing)
+- [License](#license)
 
-## 🚀 Features
+## Features
 
 ### Core Functionality
 - **User Management**: Registration, authentication, and profile management
@@ -39,7 +39,7 @@ A comprehensive **Spring Boot REST API** for personal finance management with co
 - **Extensive Testing**: 88% test coverage with unit, integration, and end-to-end tests
 - **Production Ready**: Comprehensive error handling and logging
 
-## 🛠 Technology Stack
+## Technology Stack
 
 ### Backend Framework
 - **Java 21**: Latest LTS version with modern language features
@@ -59,19 +59,19 @@ A comprehensive **Spring Boot REST API** for personal finance management with co
 - **JavaDoc**: Comprehensive API documentation
 - **Comprehensive Test Suite**: 960+ test scenarios for complete validation
 
-## 🏗 Architecture & Design Decisions
+## Architecture & Design Decisions
 
 ### Layered Architecture
 ```
-┌─────────────────────────────────────┐
-│           Controller Layer          │  ← REST endpoints, request handling
-├─────────────────────────────────────┤
-│            Service Layer            │  ← Business logic, transaction management
-├─────────────────────────────────────┤
-│          Repository Layer           │  ← Data access, JPA repositories
-├─────────────────────────────────────┤
-│            Entity Layer             │  ← Data models, JPA entities
-└─────────────────────────────────────┘
++-------------------------------------+
+|           Controller Layer          |  <- REST endpoints, request handling
++-------------------------------------+
+|            Service Layer            |  <- Business logic, transaction management
++-------------------------------------+
+|          Repository Layer           |  <- Data access, JPA repositories
++-------------------------------------+
+|            Entity Layer             |  <- Data models, JPA entities
++-------------------------------------+
 ```
 
 ### Key Design Decisions
@@ -106,7 +106,7 @@ A comprehensive **Spring Boot REST API** for personal finance management with co
 - **Implementation**: Bean validation annotations + custom business logic validation
 - **Benefits**: Data quality, security, clear error messaging
 
-## ⚙️ Setup Instructions
+## Setup Instructions
 
 ### Prerequisites
 ```bash
@@ -123,7 +123,7 @@ A comprehensive **Spring Boot REST API** for personal finance management with co
 
 #### 1. **Clone the Repository**
 ```bash
-git clone https://github.com/your-username/finance-management.git
+git clone https://github.com/yash-tr/Personal-Finance-Manager.git
 cd finance-management
 ```
 
@@ -227,7 +227,7 @@ bash financial_manager_tests.sh  # Linux/Mac
 # or use Git Bash on Windows
 ```
 
-## 📚 API Documentation
+## API Documentation
 
 ### Authentication Endpoints
 
@@ -511,7 +511,7 @@ All endpoints return consistent error responses:
 }
 ```
 
-## 🗄 Database Schema
+## Database Schema
 
 ### Entity Relationships
 ```
@@ -553,7 +553,7 @@ CREATE TABLE transactions (
 );
 ```
 
-## 🧪 Testing
+## Testing
 
 ### Test Coverage Summary
 - **Overall Coverage**: 88%
@@ -602,7 +602,7 @@ bash financial_manager_tests.sh
 5. **Service Tests**: Test business logic
 6. **Validation Tests**: Test input validation and error handling
 
-## 🔒 Security
+## Security
 
 ### Authentication & Authorization
 - **Session-based Authentication**: Secure session management
@@ -621,7 +621,7 @@ bash financial_manager_tests.sh
 - **Content Security Policy**: XSS prevention
 - **Frame Options**: Clickjacking prevention
 
-## ⚡ Performance
+## Performance
 
 ### Optimization Strategies
 - **Lazy Loading**: JPA lazy loading for related entities
@@ -634,7 +634,7 @@ bash financial_manager_tests.sh
 - **Database Performance**: Query optimization and indexing
 - **Response Time Monitoring**: Built-in request timing
 
-## 🤝 Contributing
+## Contributing
 
 ### Development Workflow
 1. Fork the repository
@@ -657,19 +657,6 @@ bash financial_manager_tests.sh
 - [ ] API validation tests passing
 - [ ] No security vulnerabilities introduced
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 📞 Support
-
-For questions, issues, or contributions:
-
-- **Issues**: [GitHub Issues](https://github.com/your-username/finance-management/issues)
-- **Documentation**: This README and JavaDoc
-- **Email**: your-email@example.com
 
 ---
 
