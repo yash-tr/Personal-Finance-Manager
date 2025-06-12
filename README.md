@@ -19,8 +19,7 @@ A comprehensive **Spring Boot REST API** for personal finance management with co
 - [Testing](#-testing)
 - [Security](#-security)
 - [Performance](#-performance)
-- [Contributing](#-contributing)
-- [License](#-license)
+
 
 ## 🚀 Features
 
