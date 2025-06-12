@@ -656,8 +656,3 @@ bash financial_manager_tests.sh
 - [ ] Documentation updated
 - [ ] API validation tests passing
 - [ ] No security vulnerabilities introduced
-
-
----
-
-**Built with ❤️ using Spring Boot and Java 21** 
