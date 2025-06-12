@@ -227,6 +227,41 @@ bash financial_manager_tests.sh  # Linux/Mac
 # or use Git Bash on Windows
 ```
 
+## Deploying to Render with Docker
+
+### 1. Docker Build & Run (Local)
+
+You can build and run the application locally using Docker:
+
+```bash
+# Build the Docker image
+# (from project root)
+docker build -t finance-management-api .
+
+# Run the container (default port 8080)
+docker run -p 8080:8080 finance-management-api
+```
+
+The app will be available at http://localhost:8080
+
+### 2. Deploy to Render
+
+Render supports deploying directly from your GitHub repo using Docker. Steps:
+
+1. **Push your code to GitHub** (already done)
+2. **Go to [Render Dashboard](https://dashboard.render.com/)**
+3. Click **"New Web Service"**
+4. Connect your GitHub repo (`yash-tr/Personal-Finance-Manager`)
+5. **Select "Docker"** as the environment
+6. **Build Command:** (leave blank, Dockerfile handles build)
+7. **Start Command:** (leave blank, Dockerfile handles start)
+8. **Environment Variables:**
+    - `PORT` (Render sets this automatically)
+    - `JWT_SECRET` (set a secure value for production)
+9. Click **"Create Web Service"**
+
+Render will build and deploy your app using the Dockerfile. Health checks are handled by Spring Boot Actuator (`/actuator/health`).
+
 ## API Documentation
 
 ### Authentication Endpoints
