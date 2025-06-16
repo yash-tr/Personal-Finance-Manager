@@ -88,15 +88,7 @@ public class TransactionService {
     @Transactional(readOnly = true)
     public List<TransactionResponse> getTransactions(LocalDate startDate, LocalDate endDate, String category) {
         User user = getCurrentUser();
-        Long categoryId = null;
-        if (category != null) {
-            Category categoryEntity = categoryRepository.findByNameAndUserId(category, user.getId())
-                    .orElse(null);
-            if (categoryEntity != null) {
-                categoryId = categoryEntity.getId();
-            }
-        }
-        List<Transaction> transactions = transactionRepository.findTransactionsByFilters(user.getId(), startDate, endDate, categoryId);
+        List<Transaction> transactions = transactionRepository.findTransactionsByFilters(user.getId(), startDate, endDate, category);
         return transactions.stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());

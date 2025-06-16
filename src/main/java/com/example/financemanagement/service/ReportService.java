@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
@@ -50,9 +51,12 @@ public class ReportService {
         Map<String, BigDecimal> incomeByCategory = calculateTotalsByCategory(transactions, CategoryType.INCOME);
         Map<String, BigDecimal> expensesByCategory = calculateTotalsByCategory(transactions, CategoryType.EXPENSE);
 
-        BigDecimal totalIncome = incomeByCategory.values().stream().reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal totalExpenses = expensesByCategory.values().stream().reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal netSavings = totalIncome.subtract(totalExpenses);
+        BigDecimal totalIncome = incomeByCategory.values().stream().reduce(BigDecimal.ZERO, BigDecimal::add).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal totalExpenses = expensesByCategory.values().stream().reduce(BigDecimal.ZERO, BigDecimal::add).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal netSavingsRaw = totalIncome.subtract(totalExpenses);
+        BigDecimal netSavings = (netSavingsRaw.compareTo(BigDecimal.ZERO) == 0)
+                ? BigDecimal.ZERO
+                : netSavingsRaw.setScale(2, RoundingMode.HALF_UP);
 
         return new MonthlyReport(month, year, incomeByCategory, expensesByCategory, netSavings);
     }
@@ -73,9 +77,12 @@ public class ReportService {
         Map<String, BigDecimal> incomeByCategory = calculateTotalsByCategory(transactions, CategoryType.INCOME);
         Map<String, BigDecimal> expensesByCategory = calculateTotalsByCategory(transactions, CategoryType.EXPENSE);
 
-        BigDecimal totalIncome = incomeByCategory.values().stream().reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal totalExpenses = expensesByCategory.values().stream().reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal netSavings = totalIncome.subtract(totalExpenses);
+        BigDecimal totalIncome = incomeByCategory.values().stream().reduce(BigDecimal.ZERO, BigDecimal::add).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal totalExpenses = expensesByCategory.values().stream().reduce(BigDecimal.ZERO, BigDecimal::add).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal netSavingsRaw = totalIncome.subtract(totalExpenses);
+        BigDecimal netSavings = (netSavingsRaw.compareTo(BigDecimal.ZERO) == 0)
+                ? BigDecimal.ZERO
+                : netSavingsRaw.setScale(2, RoundingMode.HALF_UP);
 
         return new YearlyReport(year, incomeByCategory, expensesByCategory, netSavings);
     }

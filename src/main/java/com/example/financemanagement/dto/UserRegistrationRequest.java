@@ -38,7 +38,7 @@ public class UserRegistrationRequest {
      * The username for the new user account, must be a valid email address.
      * This will be used for authentication and must be unique across all users.
      */
-    @NotBlank
+    @NotBlank(message = "Username is required")
     @Email(message = "Username must be a valid email address")
     private String username;
 
@@ -55,13 +55,13 @@ public class UserRegistrationRequest {
      * The full display name of the user.
      * Cannot be blank and will be displayed in the user interface.
      */
-    @NotBlank
+    @NotBlank(message = "Full name is required")
     private String fullName;
 
     /**
      * The contact phone number for the user.
      * Cannot be blank and should include country code for international numbers.
      */
-    @NotBlank
+    @NotBlank(message = "Phone number is required")
     private String phoneNumber;
 } 

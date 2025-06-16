@@ -7,18 +7,17 @@ import com.example.financemanagement.entity.User;
 import com.example.financemanagement.exception.ResourceConflictException;
 import com.example.financemanagement.repository.CategoryRepository;
 import com.example.financemanagement.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -40,8 +39,9 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class UserService implements UserDetailsService {
+public class UserService {
 
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final PasswordEncoder passwordEncoder;
@@ -80,15 +80,26 @@ public class UserService implements UserDetailsService {
             throw new IllegalArgumentException("Registration request cannot be null");
         }
 
-        if (userRepository.existsByUsername(request.getUsername())) {
-            throw new ResourceConflictException("Username already exists: " + request.getUsername());
+        String username = request.getUsername();
+        String fullName = request.getFullName();
+        
+        if (username == null || username.trim().isEmpty()) {
+            throw new IllegalArgumentException("Username/email is required");
+        }
+        
+        if (fullName == null || fullName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Name is required");
+        }
+
+        if (userRepository.existsByUsername(username)) {
+            throw new ResourceConflictException("Username already exists: " + username);
         }
 
         User user = new User();
-        user.setUsername(request.getUsername());
+        user.setUsername(username);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setFullName(request.getFullName());
-        user.setPhoneNumber(request.getPhoneNumber());
+        user.setFullName(fullName);
+        user.setPhoneNumber(request.getPhoneNumber() != null ? request.getPhoneNumber() : "");
 
         User savedUser = userRepository.save(user);
 
@@ -137,33 +148,5 @@ public class UserService implements UserDetailsService {
         
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
-    }
-
-    /**
-     * Loads user details by username for Spring Security authentication.
-     * 
-     * <p>This method is part of the UserDetailsService interface implementation
-     * and is called by Spring Security during the authentication process. It
-     * retrieves the user from the database and wraps it in a UserDetails object.
-     * 
-     * @param username the username (email) of the user to load
-     * @return a UserDetails object containing the user's authentication information
-     * @throws UsernameNotFoundException if no user with the given username exists
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
-
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getUsername())
-                .password(user.getPassword())
-                .authorities(Collections.emptyList())
-                .accountExpired(false)
-                .accountLocked(false)
-                .credentialsExpired(false)
-                .disabled(false)
-                .build();
     }
 } 

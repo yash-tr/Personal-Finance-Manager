@@ -146,11 +146,15 @@ public class SavingsGoalService {
     private SavingsGoalResponse convertToResponse(SavingsGoal goal) {
         BigDecimal currentProgress = calculateProgress(goal);
         BigDecimal remainingAmount = goal.getTargetAmount().subtract(currentProgress);
-        double progressPercentage = 0;
+        BigDecimal progressPercentageBd = BigDecimal.ZERO;
         if (goal.getTargetAmount().compareTo(BigDecimal.ZERO) > 0) {
-            progressPercentage = currentProgress.divide(goal.getTargetAmount(), 4, RoundingMode.HALF_UP)
-                    .multiply(new BigDecimal("100")).doubleValue();
+            progressPercentageBd = currentProgress.divide(goal.getTargetAmount(), 4, RoundingMode.HALF_UP)
+                    .multiply(new BigDecimal("100"))
+                    .setScale(2, RoundingMode.HALF_UP)
+                    .stripTrailingZeros();
         }
+
+        double progressPercentage = progressPercentageBd.doubleValue();
 
         return new SavingsGoalResponse(
                 goal.getId(),

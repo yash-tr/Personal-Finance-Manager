@@ -43,12 +43,12 @@ public class TransactionController {
      * @return A list of transactions.
      */
     @GetMapping
-    public ResponseEntity<List<TransactionResponse>> getTransactions(
+    public ResponseEntity<Map<String, List<TransactionResponse>>> getTransactions(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
             @RequestParam(required = false) String category) {
         List<TransactionResponse> transactions = transactionService.getTransactions(startDate, endDate, category);
-        return ResponseEntity.ok(transactions);
+        return ResponseEntity.ok(Map.of("transactions", transactions));
     }
 
     /**

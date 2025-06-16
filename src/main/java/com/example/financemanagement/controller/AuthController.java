@@ -8,6 +8,7 @@ import com.example.financemanagement.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,9 +17,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -86,59 +87,59 @@ public class AuthController {
     }
 
     /**
-     * Authenticates a user and establishes a session.
-     * 
-     * <p>This endpoint validates user credentials and creates an authenticated session
-     * if the credentials are valid. The session is maintained through HTTP cookies
-     * and can be used for subsequent authenticated requests.
-     * 
-     * <p>Authentication is performed through Spring Security's AuthenticationManager,
-     * which handles password verification and account status checks.
-     * 
-     * @param loginRequest the login credentials containing username and password
-     * @param request the HTTP servlet request for session management
-     * @param response the HTTP servlet response for setting authentication cookies
-     * @return ResponseEntity containing success message (200 OK) or error details
+     * Authenticates a user with the provided credentials and establishes an HTTP session.
+     *
+     * <p>This endpoint expects a JSON payload containing <code>username</code> and <code>password</code>.
+     * On successful authentication, a session is created (or reused) and the standard <code>JSESSIONID</code>
+     * cookie is returned to the client so that subsequent requests are authenticated.</p>
+     *
+     * @param loginRequest the login credentials
+     * @param request      the HTTP request (needed for session handling)
+     * @return 200 OK with a JSON success message, or 401 when the credentials are invalid
      */
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(
-            @Valid @RequestBody LoginRequest loginRequest,
-            HttpServletRequest request,
-            HttpServletResponse response) {
-        
+    public ResponseEntity<Map<String, String>> login(@Valid @RequestBody LoginRequest loginRequest,
+                                                    HttpServletRequest request) {
         try {
-            UsernamePasswordAuthenticationToken authToken = 
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
-            
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                    loginRequest.getUsername(), loginRequest.getPassword());
+
             Authentication authentication = authenticationManager.authenticate(authToken);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            
-            // Create new session
+
+            // Store authentication in the security context
+            SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+            securityContext.setAuthentication(authentication);
+            SecurityContextHolder.setContext(securityContext);
+
+            // Create or retrieve the HTTP session and attach the security context to it
             HttpSession session = request.getSession(true);
-            session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
-            
-            Map<String, String> responseBody = new HashMap<>();
-            responseBody.put("message", "Login successful");
-            return ResponseEntity.ok(responseBody);
-        } catch (Exception e) {
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("error", "Invalid credentials");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+            session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);
+
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Login successful");
+            return ResponseEntity.ok(response);
+        } catch (BadCredentialsException ex) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Invalid username or password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
         }
     }
 
     /**
-     * Logs out the current user.
-     * @param request The HTTP request.
-     * @param response The HTTP response.
-     * @return A response entity with a success message.
+     * Logs out the current user by invalidating their HTTP session and clearing the security context.
+     *
+     * @param request  the HTTP request
+     * @param response the HTTP response
+     * @return 200 OK with a confirmation message
      */
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<Map<String, String>> logout(HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null) {
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
-        return ResponseEntity.ok(Map.of("message", "Logout successful"));
+        Map<String, String> res = new HashMap<>();
+        res.put("message", "Logout successful");
+        return ResponseEntity.ok(res);
     }
 } 
